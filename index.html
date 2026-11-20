@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="منصة تجريبية لعرض وبيع وشراء السيارات">
+  <title>سوق السيارات | Car Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#"><span class="brand-icon">CM</span><span>سوق السيارات</span></a>
+    <nav><a href="#inventory">السيارات</a><a href="#sell">أضف إعلانك</a></nav>
+    <a class="sell-link" href="#sell">+ بيع سيارتك</a>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <span class="kicker">وجهتك الأولى لعالم السيارات</span>
+        <h1>اعثر على سيارتك<br><span>القادمة بسهولة</span></h1>
+        <p>تصفح مجموعة من السيارات المعروضة للبيع، قارن الأسعار، أو أضف إعلان سيارتك خلال دقائق.</p>
+        <a class="button button-light" href="#inventory">تصفح السيارات ←</a>
+      </div>
+      <div class="hero-photo" aria-label="سيارة معروضة للبيع"></div>
+    </section>
+
+    <section class="quick-stats">
+      <div><strong id="total-count">0</strong><span>سيارات معروضة</span></div>
+      <div><strong>24/7</strong><span>تصفح في أي وقت</span></div>
+      <div><strong>بسهولة</strong><span>أضف إعلانك بنفسك</span></div>
+    </section>
+
+    <section class="section" id="inventory">
+      <div class="section-title">
+        <div><span class="kicker dark">اكتشف الخيارات</span><h2>السيارات المتاحة</h2></div>
+        <span id="results-count" class="muted"></span>
+      </div>
+      <div class="filters">
+        <label class="search"><span>⌕</span><input id="search" type="search" placeholder="ابحث عن الماركة أو الموديل..." aria-label="ابحث عن سيارة"></label>
+        <select id="brand-filter" aria-label="تصفية حسب الشركة"><option value="">كل الشركات</option></select>
+        <select id="price-filter" aria-label="تصفية حسب السعر">
+          <option value="">كل الأسعار</option>
+          <option value="10000">أقل من 10,000 دولار</option>
+          <option value="20000">أقل من 20,000 دولار</option>
+          <option value="30000">أقل من 30,000 دولار</option>
+        </select>
+      </div>
+      <div class="car-grid" id="car-grid"></div>
+      <p id="empty-state" class="empty hidden">لا توجد سيارات تطابق خيارات البحث.</p>
+    </section>
+
+    <section class="sell-section" id="sell">
+      <div class="sell-intro">
+        <span class="kicker dark">هل تريد البيع؟</span>
+        <h2>أضف سيارتك إلى المعرض</h2>
+        <p>أدخل بيانات سيارتك لتظهر مباشرة في قائمة السيارات على هذا الجهاز.</p>
+      </div>
+      <form id="car-form" class="car-form">
+        <label>اسم السيارة<input name="name" required maxlength="60" placeholder="مثال: Toyota Camry"></label>
+        <label>الشركة<input name="brand" required maxlength="30" placeholder="مثال: Toyota"></label>
+        <label>سنة الصنع<input name="year" type="number" min="1980" max="2035" required placeholder="2022"></label>
+        <label>السعر بالدولار<input name="price" type="number" min="1" required placeholder="15000"></label>
+        <label class="wide">رابط صورة السيارة (اختياري)<input name="image" type="url" placeholder="https://example.com/car.jpg"></label>
+        <button class="button wide" type="submit">إضافة السيارة</button>
+        <p id="form-message" class="form-message wide" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer><span>© <span id="year"></span> سوق السيارات</span><span>مشروع تجريبي تعليمي</span></footer>
+
+  <template id="car-template">
+    <article class="car-card">
+      <div class="car-image"><img alt=""><span class="year-tag"></span></div>
+      <div class="car-details">
+        <span class="car-brand"></span>
+        <h3 class="car-name"></h3>
+        <div class="car-bottom"><strong class="car-price"></strong><button class="delete-button" type="button">حذف الإعلان</button></div>
+      </div>
+    </article>
+  </template>
+  <script src="script.js"></script>
+</body>
+</html>
