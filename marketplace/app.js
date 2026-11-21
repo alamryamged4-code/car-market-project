@@ -12,15 +12,17 @@ let userAds=[];try{userAds=JSON.parse(localStorage.getItem("souq-yemen-ads")||"[
 let activeCategory="الكل";
 const $=s=>document.querySelector(s);
 const money=n=>new Intl.NumberFormat("ar-SA").format(Number(n)||0)+" ر.س";
+let adCurrencies={};
+try{adCurrencies=JSON.parse(localStorage.getItem("souq-yemen-ad-currencies")||"{}")}catch(e){}
 let currencySettings={currency:"SAR",oldRate:"",newRate:""};
 try{currencySettings={...currencySettings,...JSON.parse(localStorage.getItem("souq-yemen-currency")||"{}")}}catch(e){}
 const currencyLabels={SAR:" ر.س",YER_OLD:" ر.ي (قديم)",YER_NEW:" ر.ي (جديد)"};
-function displayMoney(sarAmount){
+function displayMoney(sarAmount,currency=currencySettings.currency){
   const amount=Number(sarAmount)||0;
-  if(currencySettings.currency==="YER_OLD"||currencySettings.currency==="YER_NEW"){
-    const rate=Number(currencySettings.currency==="YER_OLD"?currencySettings.oldRate:currencySettings.newRate);
+  if(currency==="YER_OLD"||currency==="YER_NEW"){
+    const rate=Number(currency==="YER_OLD"?currencySettings.oldRate:currencySettings.newRate);
     if(!rate||rate<=0)return money(amount)+" (أدخل سعر الصرف من إعدادات العملة)";
-    return new Intl.NumberFormat("ar-SA",{maximumFractionDigits:0}).format(Math.round(amount*rate))+currencyLabels[currencySettings.currency];
+    return new Intl.NumberFormat("ar-SA",{maximumFractionDigits:0}).format(Math.round(amount*rate))+currencyLabels[currency];
   }
   return money(amount);
 }
@@ -47,6 +49,7 @@ $("#currency-form").addEventListener("submit",e=>{
 });
 function allAds(){return [...userAds,...sampleAds]}
 function render(){const q=$("#search").value.trim().toLowerCase(),city=$("#city").value;const list=allAds().filter(a=>(activeCategory==="الكل"||a.category===activeCategory)&&(!city||a.city===city)&&(!q||(a.title+" "+a.description+" "+a.category+" "+a.city).toLowerCase().includes(q)));$("#listing-grid").innerHTML=list.map(a=>'<article class="listing"><div class="listing-image">'+(a.image?'<img loading="lazy" src="'+escapeAttr(a.image)+'" alt="'+escapeAttr(a.title)+'" onerror="this.remove();this.parentElement.insertAdjacentHTML(\'beforeend\',\'<span class=emoji>'+a.emoji+'</span>\')">':'<span class="emoji">'+a.emoji+'</span>')+'<span class="tag">'+a.category+'</span></div><div class="listing-body"><h3>'+escapeHtml(a.title)+'</h3><div class="listing-meta"><span>📍 '+escapeHtml(a.city)+'</span><span>إعلان مبوب</span></div><div class="listing-price">'+displayMoney(a.price)+'</div><p class="listing-desc">'+escapeHtml(a.description||"تواصل مع المعلن لمعرفة التفاصيل.")+'</p>'+(a.phone?'<a class="contact" target="_blank" rel="noopener" href="https://wa.me/'+encodeURIComponent(a.phone.replace(/[^0-9]/g,""))+'">تواصل عبر واتساب</a>':'<span class="contact">نموذج عرض تجريبي</span>')+'</div></article>').join("");$("#count").textContent=list.length+" إعلان";$("#empty").classList.toggle("hidden",list.length>0)}
+$("#listing-grid").addEventListener("change",e=>{if(!e.target.matches(".listing-currency"))return;adCurrencies[e.target.dataset.adId]=e.target.value;try{localStorage.setItem("souq-yemen-ad-currencies",JSON.stringify(adCurrencies))}catch(err){}render()});
 function escapeHtml(s=""){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function escapeAttr(s=""){return escapeHtml(s)}
 function openModal(){$("#modal").classList.remove("hidden");document.body.style.overflow="hidden"}
