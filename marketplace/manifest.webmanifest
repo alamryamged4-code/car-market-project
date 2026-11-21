@@ -1,0 +1,21 @@
+{
+  "id": "./",
+  "name": "السوق اليمني",
+  "short_name": "السوق اليمني",
+  "description": "سوق إلكتروني للإعلانات المبوبة في اليمن",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7f8f5",
+  "theme_color": "#123b35",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
