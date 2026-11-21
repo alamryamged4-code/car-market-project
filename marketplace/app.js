@@ -10,6 +10,8 @@ const sampleAds=[
 ];
 let userAds=[];try{userAds=JSON.parse(localStorage.getItem("souq-yemen-ads")||"[]")}catch(e){userAds=[]}
 let activeCategory="الكل";
+const $=s=>document.querySelector(s);
+const money=n=>new Intl.NumberFormat("ar-SA").format(Number(n)||0)+" ر.س";
 let currencySettings={currency:"SAR",oldRate:"",newRate:""};
 try{currencySettings={...currencySettings,...JSON.parse(localStorage.getItem("souq-yemen-currency")||"{}")}}catch(e){}
 const currencyLabels={SAR:" ر.س",YER_OLD:" ر.ي (قديم)",YER_NEW:" ر.ي (جديد)"};
@@ -43,8 +45,6 @@ $("#currency-form").addEventListener("submit",e=>{
   try{localStorage.setItem("souq-yemen-currency",JSON.stringify(currencySettings));render();$("#currency-note").textContent="تم حفظ إعدادات العملة على هذا الجهاز.";setTimeout(closeCurrencySettings,700)}
   catch(err){$("#currency-note").textContent="تعذر حفظ الإعدادات في المتصفح."}
 });
-const $=s=>document.querySelector(s);
-const money=n=>new Intl.NumberFormat("ar-SA").format(Number(n)||0)+" ر.س";
 function allAds(){return [...userAds,...sampleAds]}
 function render(){const q=$("#search").value.trim().toLowerCase(),city=$("#city").value;const list=allAds().filter(a=>(activeCategory==="الكل"||a.category===activeCategory)&&(!city||a.city===city)&&(!q||(a.title+" "+a.description+" "+a.category+" "+a.city).toLowerCase().includes(q)));$("#listing-grid").innerHTML=list.map(a=>'<article class="listing"><div class="listing-image">'+(a.image?'<img loading="lazy" src="'+escapeAttr(a.image)+'" alt="'+escapeAttr(a.title)+'" onerror="this.remove();this.parentElement.insertAdjacentHTML(\'beforeend\',\'<span class=emoji>'+a.emoji+'</span>\')">':'<span class="emoji">'+a.emoji+'</span>')+'<span class="tag">'+a.category+'</span></div><div class="listing-body"><h3>'+escapeHtml(a.title)+'</h3><div class="listing-meta"><span>📍 '+escapeHtml(a.city)+'</span><span>إعلان مبوب</span></div><div class="listing-price">'+displayMoney(a.price)+'</div><p class="listing-desc">'+escapeHtml(a.description||"تواصل مع المعلن لمعرفة التفاصيل.")+'</p>'+(a.phone?'<a class="contact" target="_blank" rel="noopener" href="https://wa.me/'+encodeURIComponent(a.phone.replace(/[^0-9]/g,""))+'">تواصل عبر واتساب</a>':'<span class="contact">نموذج عرض تجريبي</span>')+'</div></article>').join("");$("#count").textContent=list.length+" إعلان";$("#empty").classList.toggle("hidden",list.length>0)}
 function escapeHtml(s=""){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
